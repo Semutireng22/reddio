@@ -1,6 +1,7 @@
 from web3 import Web3
 import requests
 from colorama import Fore, Style, init
+import time
 
 # Inisialisasi colorama
 init(autoreset=True)
@@ -57,17 +58,22 @@ def daily_checkin(wallet_address):
     except Exception as e:
         print(f"{Fore.RED}Terjadi kesalahan: {e}")
 
+def auto_daily_checkin(wallet_address):
+    while True:
+        daily_checkin(wallet_address)
+        print(f"{Fore.CYAN}Menunggu 24 jam untuk check-in berikutnya...")
+        time.sleep(86400)  # 86400 detik = 24 jam
+
 def main_menu():
     print(f"{Fore.CYAN}=======================================")
     print(f"{Fore.YELLOW}    Reddio Automatic Bot")
     print(f"{Fore.CYAN}=======================================")
     print(f"{Fore.MAGENTA}   Channel: https://t.me/ugdairdrop")
     print(f"{Fore.CYAN}=======================================")
-
     while True:
         print(f"\n{Fore.CYAN}Menu Utama")
         print(f"{Fore.CYAN}1. {Fore.YELLOW}Generate Referrals")
-        print(f"{Fore.CYAN}2. {Fore.YELLOW}Daily Check-in")
+        print(f"{Fore.CYAN}2. {Fore.YELLOW}Auto Daily Check-in Setiap 24 Jam")
         print(f"{Fore.CYAN}3. {Fore.RED}Keluar")
         
         pilihan = input(f"{Fore.CYAN}Pilih opsi (1/2/3): ")
@@ -77,8 +83,8 @@ def main_menu():
             invitation_code = input(f"{Fore.CYAN}Masukkan kode referral: ")
             generate_referrals(number_of_wallets, invitation_code)
         elif pilihan == "2":
-            wallet_address_manual = input(f"{Fore.CYAN}Masukkan wallet address untuk daily check-in: ")
-            daily_checkin(wallet_address_manual)
+            wallet_address_manual = input(f"{Fore.CYAN}Masukkan wallet address untuk auto daily check-in: ")
+            auto_daily_checkin(wallet_address_manual)
         elif pilihan == "3":
             print(f"{Fore.RED}Keluar dari program.")
             break
@@ -87,3 +93,4 @@ def main_menu():
 
 # Jalankan menu utama
 main_menu()
+
