@@ -1,12 +1,12 @@
 # Reddio Auto Refferal & Daily Check-in
 
 ## Fitur
-- **Generate Referrals:**
 - **Daily Check-in:**
+- **Multi Address**
 
 ## Persyaratan
 - Python 3.x
-- Pustaka: `web3`, `requests`, `colorama`, `time`
+- Pustaka: `requests`, `colorama`, `time`
 
 ## Instalasi
 1. Clone repositori:
@@ -24,9 +24,10 @@
    ```bash
    python3 main.py
    ```
-2. Pilih menu:
-   - `1`: Generate Referrals
-   - `2`: Daily Check-in
-   - `3`: Keluar
+2. Masukan alamat anda (Jika alamat lebih dari 1 pisahkan dengan koma)
+   Contoh :
+   ```
+   (0xA43axxxxxxxxxxx,0x374502Fxxxxxxxxxxxxx)
+   ```
 
 `Jika ingin daily-checkin jalankan di dalam screen`
