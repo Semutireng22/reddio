@@ -1,96 +1,37 @@
-from web3 import Web3
 import requests
-from colorama import Fore, Style, init
 import time
+from colorama import init, Fore, Style
 
-# Inisialisasi colorama
+# Initialize colorama
 init(autoreset=True)
 
-def create_wallet():
-    w3 = Web3()
-    account = w3.eth.account.create()
-    return account.address, account._private_key.hex()
+# Display the title and channel link
+print(Fore.CYAN + "=" * 41)
+print(Fore.GREEN + "           Reddio Automatic Bot       ")
+print(Fore.CYAN + "=" * 41)
+print(Fore.YELLOW + "   Channel: https://t.me/ugdairdrop   ")
+print(Fore.CYAN + "=" * 41)
 
-def auto_referral(wallet_address, invitation_code):
-    url = "https://points-mainnet.reddio.com/v1/register"
-    payload = {
-        "wallet_address": wallet_address,
-        "invitation_code": invitation_code
-    }
-    
-    headers = {
-        "Content-Type": "application/json"
-    }
-    
-    try:
-        response = requests.post(url, json=payload, headers=headers)
-        
-        if response.status_code == 200:
-            return True
-        else:
-            return False
-    except Exception as e:
-        print(f"{Fore.RED}Terjadi kesalahan: {e}")
-        return False
+# Prompt the user to input multiple wallet addresses, separated by commas
+addresses_input = input(Fore.BLUE + "Enter your wallet addresses (separated by commas): ")
 
-def generate_referrals(number_of_wallets, invitation_code):
-    successful_referrals = 0
-    
-    for _ in range(number_of_wallets):
-        wallet_address, _ = create_wallet()
-        
-        if auto_referral(wallet_address, invitation_code):
-            successful_referrals += 1
-    
-    print(f"{Fore.GREEN}Jumlah referral yang berhasil: {successful_referrals}")
+# Split the input into a list of wallet addresses
+wallet_addresses = [address.strip() for address in addresses_input.split(',')]
 
-def daily_checkin(wallet_address):
-    url = f"https://points-mainnet.reddio.com/v1/daily_checkin?wallet_address={wallet_address}"
-    
-    try:
+while True:
+    for wallet_address in wallet_addresses:
+        # Define the check-in URL for each address
+        url = f"https://points-mainnet.reddio.com/v1/daily_checkin?wallet_address={wallet_address}"
+
+        # Send the request and get the response
         response = requests.get(url)
-        
+
+        # Check the response status
         if response.status_code == 200:
-            print(f"{Fore.GREEN}Daily check-in berhasil untuk {wallet_address}!")
+            print(Fore.GREEN + f"Check-in successful for {wallet_address}!")
         else:
-            print(f"{Fore.RED}Daily check-in gagal untuk {wallet_address} dengan status code: {response.status_code}")
-            print(f"Pesan: {response.text}")
-    except Exception as e:
-        print(f"{Fore.RED}Terjadi kesalahan: {e}")
+            print(Fore.RED + f" Already check-in for {wallet_address}. Please try again.")
 
-def auto_daily_checkin(wallet_address):
-    while True:
-        daily_checkin(wallet_address)
-        print(f"{Fore.CYAN}Menunggu 24 jam untuk check-in berikutnya...")
-        time.sleep(86400)  # 86400 detik = 24 jam
-
-def main_menu():
-    print(f"{Fore.CYAN}=======================================")
-    print(f"{Fore.YELLOW}    Reddio Automatic Bot")
-    print(f"{Fore.CYAN}=======================================")
-    print(f"{Fore.MAGENTA}   Channel: https://t.me/ugdairdrop")
-    print(f"{Fore.CYAN}=======================================")
-    while True:
-        print(f"\n{Fore.CYAN}Menu Utama")
-        print(f"{Fore.CYAN}1. {Fore.YELLOW}Generate Referrals")
-        print(f"{Fore.CYAN}2. {Fore.YELLOW}Auto Daily Check-in Setiap 24 Jam")
-        print(f"{Fore.CYAN}3. {Fore.RED}Keluar")
-        
-        pilihan = input(f"{Fore.CYAN}Pilih opsi (1/2/3): ")
-        
-        if pilihan == "1":
-            number_of_wallets = int(input(f"{Fore.CYAN}Masukkan jumlah wallet yang ingin dibuat: "))
-            invitation_code = input(f"{Fore.CYAN}Masukkan kode referral: ")
-            generate_referrals(number_of_wallets, invitation_code)
-        elif pilihan == "2":
-            wallet_address_manual = input(f"{Fore.CYAN}Masukkan wallet address untuk auto daily check-in: ")
-            auto_daily_checkin(wallet_address_manual)
-        elif pilihan == "3":
-            print(f"{Fore.RED}Keluar dari program.")
-            break
-        else:
-            print(f"{Fore.RED}Pilihan tidak valid, silakan coba lagi.")
-
-# Jalankan menu utama
-main_menu()
-
+    # Wait for 24 hours (86400 seconds) before checking in again
+    print(Fore.YELLOW + "Silahkan tunggu 24 Jam sebelum mencoba lagi.")
+    time.sleep(86400)
